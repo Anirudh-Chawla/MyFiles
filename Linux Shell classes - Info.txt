@@ -1,0 +1,706 @@
+Pwd: anirudh@123
+
+Find and locate
+
+find . -name "test*"
+
+. - present working directory
+-name - name of the file to search
+
+if locate is not working do updatedb
+
+locate filename
+
+9422
+
+/boot - Contains the file used by boot loader (grub.cfg
+/root - Root user home directory, not same as /
+/dev - System devices (eg disk, cdrom, speakers)
+/etc - COnfiguration Files
+/bin -> /user/bin  Everyday user commands
+/sbin -> /user/sbin  - Syetm/Filesyetem Commands
+/opt Optional add on applications (Not aprt of OS apps)
+/proc Running processes (Only exist in Memory)
+/lib -> /usr/lib  C programming library files needed by commands and apps
+strace -e open pwd
+
+/tmp - Temporary Files
+/home - DIrectory for users
+/var System Logs
+/run System daemons that start very early *eg systemd udev) to stoe temporay runtime files like PID files
+
+/mnt To mount external systems liek NFS
+
+/media - For cdrom mounts
+
+Wildcards
+
+* represents 0 or more characters
+? represents a single character
+[] Represents a range of characters
+
+Commnad to Open Image File in Linux
+
+yum install ImageMagick -y
+cd <path>
+display <file-name>
+
+Limux File types
+- Regular File
+d Directory
+l link
+c Special file or Device file
+s socket
+p Named pipe
+b Block Device
+
+
+
+More/Less Command
+
+more will view one page at a time using spacebar
+
+less will view in reverse, use j and k to go down or come up one line at at time
+
+Cut Command
+
+1. cut -c1 <file-name>  Fetches 1st characer from each line
+2. cut -c1-3 <file> Range provided
+4. cut -c1,3,5,7 <file> List provided
+5. cut -d: -f 1 <file> Delimiter with fiels name
+5 cut -d -f 1-2 <file> Fiels with Range
+6. ls -l | cut -c2-3
+
+
+Awk Cmmand
+
+awk --version
+
+awk '{print $1}' <file-name>
+awk '{print $1,$3}' >filename>
+awk '{print $NF}' <file>   - last Field
+awk '/DMA/ {print}' <file>  - Search for a particular field
+awk -F":" '{print $1'} >file-name>
+cat <file> | awk {$2="Test";print $0}'  - Replace all 2nd fiels with word Test and prints
+ls -l | awk '{if ($9 == "passwd") print}'  - Find those field where $9 == passwd
+ls -l | awk '{print NF}'  - Number of fields
+
+Gre[/Egrep
+
+grep --version    - Versin Number
+grep keyword file
+grep -c keytword file  - Gives count of how many times word appears
+grep -i Keyword FIle - Case Insensitive search
+grep -n keyword - show match wih line numbers
+grep -v keyword file - egt everything exceept the one given
+egrep -i "Anirudh|Rakesh" <file>  - Searches more than one with a pipe
+
+
+Sort
+
+sort --version
+sort -r file - Reverse Order
+sort -k2 file - Starts from wnd file
+uniq filename- Dooesnt remove duplicates, use it with sort 
+sort <file> | uniq -c
+sort <file> | uniq -d - Show only repeated lines
+
+wc
+
+wc - new line count, word count, byte count
+
+wc -l - Lines
+wc -w - Word
+Wc -b - Byte count
+
+
+tar 
+
+tar cvf <file>.tar <files>
+gzip <file>.tar  - Compress
+gzip -d <file>.tar,gz -- Uncompress
+
+
+
+truncate
+
+if file is shorter it will append with characters, if larger will cut it
+
+
+truncate -s 50 file 
+
+
+Split  - Split on every 100 lines
+
+split -l 100 <file> <new file>
+
+
+Linux vs Windows Command
+Listing dir ls -l
+Rename ren mv
+Copy copy cp
+Move move mv
+Clear Screen cls clear
+Delete a file del rm 
+Compare cotents fc diff
+Search for a word find grep
+Command help command /? man
+Display current location chdir pwd
+Display tiem time date
+
+
+Vi editor
+
+Esc - Command Mode
+i - insert mode
+save a file and press :wq! or SHift + ZZ
+
+All in command mode
+x - Cut on character
+u - Undo operation
+r- This will prepare to replace a character and then enter the charcter you want to replace with
+o - Puts a new line below the line your cursor is and puts the prompt in Insert Mode
+a - gives a new space from the cursor to write to next and puts prompt in insert mode
+dd- Delete a line
+To search put / and type the word
+:q! - Exit
+
+Shift + G - Go to end of the file
+
+
+Sed command
+
+Repalces a string with a new string.
+
+sed 's/name/Name1/g' <file>   - Subsititutes but not replace in the file
+use -i to insert in the file
+
+Find and delete a line
+
+sed '/Name/d' file
+
+Remove Empty Lines
+
+sed '/^$/d' new1
+
+
+Remove the first line in a file
+
+sed '1d' <filename> - Delete 1st
+sed '1,2d' <filename> - Delete 1st n 2nd line
+sed '$d' <file> - Delete the lsat line
+
+
+To Replace Tabs
+ sed 's/\t//g' <file>
+ 
+ 
+ Show Defined lines
+ 
+ sed -n 2,4p <file>  - Shows lines 2 to 4
+ sed 2,4d <file>  - Shows alll except 2-4
+ 
+ 
+ Put space after each line
+ sed G <file>
+ 
+ 
+ Substitute alll except a particular line
+ sed '8!s/Name/name1/' <file>
+ 
+ Replace in Vi
+ :%s/Name/name1
+ 
+ 
+ 
+ User Account Management
+ 
+ Commands
+ useradd
+ groupadd
+ userdel
+ groupdel
+ usermod
+ 
+ Files
+ /etc/passwd
+ /etc/group
+ /etc/shadow
+ 
+ Example
+ useradd -g superheros -s /bin/bash -c "user description" -m -d /home/spiderman spiderman.
+ 
+ 
+ With root
+ useradd spiderman
+ groupadd superman
+ 
+ userdel spiderman  - Doesnt delete home directory
+ userdel -r spiderman - Delete home directory also
+ 
+ 
+ groupdel <groupname>
+ 
+ Add user to group
+ useradd -G <group name> <user name>
+ 
+ 
+ Modify the visudo file to add user to group or user to wheel to conduct sudo opertion
+ 
+ 
+ Momitor users
+ 
+ 1. who - shows users logged in from all terminals
+ 2. last - all users logged in from inception time
+ 3. w  - just like who
+ 
+ 
+ Talking to Users
+ 
+1.  users - See all users logged in
+ wall - To send message to all users
+ 
+ 
+ 
+ Type message and press Ctl + D
+ 
+ 
+
+ 3. Write - Send message to one user
+ 
+ write <user>
+ 
+ 
+Difference Between Protocols
+
+1. Active Directory = Microsoft
+2. IDM = Identity Manager
+3. WinBIND = Used in linux to COmmunicate with Windows (Samba)
+4. OpenLDAP Open Source
+5. IBM DIrectory Server
+6. LDAP = Light Weight Directory Access Protocl - Used when any of the directory services like above are installed and it is not a directory services
+
+Syetem Utility Commands
+
+date 
+uptime
+hostname
+uname
+which <command name>
+cal 
+bc
+
+Process and Jobs
+
+Application = Service
+
+Script Written in a file to execute
+
+Process A process is an isntance of an application
+
+Daemon Runs until Uninterrupted
+
+Threads Every process could have multiple threads associated with it
+
+Job - Run a service or process as a work order
+
+Process/Service Commands
+systemctl  - To start/stop an application, also used at boot time. ntp is replaced with chronyd in RHEL 7
+
+syetemctl enable ntpd  - This will enable start at boot time and create a symlink
+
+syetemctl enable ntpd
+
+
+
+ps Check the process
+top Gives top users utilizing the system
+kill Kill a process
+crontab Scehedule process
+at
+ 
+ 
+ Using Crontab
+ 
+ Open crotab -e
+ 50 13 * 10 * echo "datta " > crontab_file
+ 
+ 50 - Minutes 
+ 13 - Hour
+ * -  day of month
+ 10 - Month
+ * - Day of week
+ 
+ 
+ 4 types of cron jobs
+ 
+ Hourly
+ 
+ Daily 
+ Weekly
+ 
+ Monthly
+ 
+ All crons are in /etc/cron._   (type)
+ The timing of each are in 
+ 
+ /etc/anacrontab
+ 
+ For Hourly
+ /etc/cron.d/hourly
+ 
+ 
+ Process Management
+ Backgrounnd = Ctrl - z , jobs and bg
+ Foreground - fg
+ Run process even after exit - nohup process &
+ OR nohup process > /dev/null 2>&1 &
+ 
+ Kill a process by name = pkill
+ 
+ Process priority = nice edg nice -n 5 process
+ 
+ The niceness scale goes from -20 to 19, the lower the number the more the priority
+ 
+ PRocess Monitoring = top
+ 
+ List process = ps
+ 
+ ---
+ 
+ sleep 10  - Runs till returns the terminals
+ Press Ctrl + Z
+ 
+ do 
+ jobs 
+ 
+ shows the killed command
+ 
+ Run bg
+ puts the killed command bck to action in background
+ 
+ run fg
+ 
+ Brings the background process back to front
+ 
+ ----
+ 
+ System Monitoring
+ 
+ top  - Shows all process
+ df - Shows disk utilization
+ dmesg - Gives the output of system warnign, errors
+ iostat 1  - Gives all input and output stats
+
+ netstat  - netstat -rnv
+ free
+ cat /proc/cpuinfo
+ cat /proc/meminfo
+ 
+ 
+ Log Monitoring
+ 
+ /var/log
+ bootchronyd-NTP
+ cron
+ maillog
+ secure
+ messages
+ httpd
+ 
+ 
+ System Maintenance Commands
+ 
+ shutdown
+ init 0-6
+ reboot
+ halt
+ 
+ 
+ Changing System Hostname
+ 
+ hostnamectl - set-hostname newhostname
+ 
+ Version 7 = Edit /etc/hostname
+ 
+ Version 6 = Edit /etc/sysconfig/network
+ 
+ init 6  - reboot
+ 
+Changing name on prompt requires reboot
+
+
+Finding System Information
+
+cat /etc/redhat-release
+uname -a
+dmidecode
+
+
+System Architecture
+
+32 bit vs 64 Bit
+
+arch
+
+
+Terminal Control keys
+
+Ctrl + u - Clears everything on the line
+Ctrl - c - Stop/Kill a Command
+Ctrl + X - Suspend a command
+
+Ctrl + D - Exit an interactive program
+
+Terminal Commands
+
+
+clear - Clear screen
+
+exit - Exit command
+
+script
+Script command stores terminal activities on a log file
+
+script <filename> - Logs the activity for that terminal for the user
+
+
+Recover Root Password
+
+
+reboot
+
+Press e
+
+rw init = /sysroot/bin/shadowctrl x
+chroot /sysroot
+passwd root
+touch ./autorelabel
+exit
+reboot
+
+
+ 
+ su password
+ 
+ testing@123
+
+
+SOS Report - To provide report for red hat case
+
+
+sosreport
+
+Enviornment Variable 
+
+Envioronment variable is dynamic named value
+
+printenv or env
+
+
+To set enviornment variables
+
+export var = <value>
+
+To set enviornment variable permanently
+
+vi .bashrc
+
+var=value
+export var
+
+source .bashrc
+to set global enviornmnent variable
+vi /etc/profile or /etc/bashrc
+
+
+
+------------
+
+Module 6
+
+Kernel - System which sits in the middle and interact with hardware
+
+Shell - is like a container, interface between users and Kernel/OS
+CLI is a shell
+
+
+Find your shell
+echo $0
+
+Available in cat/etc/shells
+
+Your shell - /etc/passwd
+
+Types of Linux shells
+
+Linux Installation with GUI
+Desktop GUI enviornments with shells
+
+Gnome 
+
+KDE 
+
+sh - Bourne Shell
+bash - Bourne again shell
+csh and tcsh shell
+ksh - Korne Shell
+
+
+Shell Scrpting
+
+1. Shell (#!/bin/bash)
+2. Comments #
+3. Command echo, cp, grep etc
+4. Statements (if, while, for etc)
+
+
+Shell script should have exectuable permission
+has to called from absolute path
+if called from current location then
+./script.bash
+
+Basic Shell Scripts
+
+Variable
+a="value"
+
+
+if-then-scripts
+
+if [ condition ]
+
+then 
+
+logic
+
+else
+Logic
+
+fi
+
+
+For Loop
+
+for x in `cat file.txt | awk '{print $1}'`
+
+do
+
+logic
+
+done
+
+
+Do while
+
+
+#!/bin/bash
+count=0
+
+while [ $count -lt 10 ]
+do
+echo $count
+sleep 1
+
+count `expr $count +1`
+done
+
+
+
+Case Statement Scripts
+
+case $choice in
+
+a) date;;
+b) ls;;
+
+*) echo "Nothing"
+
+esac
+
+
+Aliases
+
+On command line
+
+alias l="ls -lrt"
+l
+
+alias pl="pwd;ls"
+pl
+
+In alias before putting $ sign put \ (baclk slash)
+
+
+Creating User or GLobal Aliases
+
+User = Applies to one user
+Global = Applies to all
+
+For User
+Put in .bashrc file
+
+FOr Global put in
+/etc/bashrc
+
+
+Hisory
+
+history commnad
+
+to run same history commands is 
+!<command number>
+
+FIle where your history command is stored in
+
+/home/<name>/.bash_history
+
+
+
+Module 7
+
+Networking Services and System Updates
+
+Change to Bridge Only Adaptor
+
+and test the ping
+
+
+Network Components
+
+IP
+Subnet mask
+Gateway - Which route to send traffic out and where to send it, modem is like gateway
+Static vs DHCP (Dynamic Host config prootocl)
+
+Interface (has a MAC address)
+
+MAC address mostly consist of ORagnizontally Unique IDentifier and Network Interface Controler
+
+A subnet mask is a 32 bit number that masks an IP address and divides the ip address into network address and host addressm Subnet mask is made by setting all network bits to all 1 and setting host bits to 0
+
+
+
+----
+
+
+Network Files and Commands
+
+1. Interface Defiantion
+2. Assigning an IP address
+3. Interface Configuration files
+
+/etc/nswitch.conf
+/etc/hosts
+/etc/sysconfig/network
+/etc/sysconfig/network-scripts/ifcfg-nic
+/etc/resolv.conf   - DNS server
+
+
+Network Commands
+ping
+ifconfig
+ifup  or ifdown
+netstat  - netstat -rnv
+tcpdump tcpdump -i <interface name>
+
