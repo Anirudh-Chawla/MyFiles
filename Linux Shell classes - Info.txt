@@ -696,6 +696,7 @@ Network Files and Commands
 /etc/sysconfig/network-scripts/ifcfg-nic
 /etc/resolv.conf   - DNS server
 
+Static IP Defined in /etc/sysconfig/network-scripts/ifcfg-nic
 
 Network Commands
 ping
@@ -703,4 +704,439 @@ ifconfig
 ifup  or ifdown
 netstat  - netstat -rnv
 tcpdump tcpdump -i <interface name>
+
+
+---
+NIC Information
+Network Interface Card
+NIC can have multiple ports
+
+ethtool <interface>
+
+Other NIC
+
+Lo = Loppback device is a special interface that your computer uses to communicate with itselg. It is used mainly for diagnostics and trouble shottong and to connect to server running on local machine
+
+virb0 = The virb0 or virtual bridge 0 interface is used for NAT. Virutal Environemtn sometime use to connect to outside world
+
+NIC Bonding
+
+NIC Bonding also known as network bonding. It can be defines as aggregation or combination of mul;tiple NIC into single bond interface
+Main purpose is to provide high availability and redeundancy
+
+
+modproobe bonding
+modinfo bonding
+
+Create /etc/sysconfig/network-scripts/ifcfg-bond0
+Edit
+/etc/sysconfig/network-scripts/ethenet1
+/etc/sysconfig/network-scripts/ethernet2
+
+
+bond0 would be like high availability
+systemctl restart network
+
+
+
+-------------
+
+wget - Download packages from the web
+
+wget <package>
+
+
+curl
+
+curl http://website.come/filena,each
+curl -O http://gogole.com
+
+https://the.earth.li/~sgtatham/putty/latest/putty-0.73.tar.gz
+
+File Transfer
+
+1. FTP
+2. Scp
+3. rsync
+
+
+
+ftp
+
+
+ftp <machine name>
+
+Enter usernmae
+Enter password
+At the ftp prompt
+ftp> put filemae
+
+Daemon: vsftpd
+
+ sftp localhost
+The authenticity of host 'localhost (::1)' can't be established.
+ECDSA key fingerprint is SHA256:Wk/7dUCxvjhQ6FI0h1ZDcQFVtAt7oqe1eHbwIReURiY.
+ECDSA key fingerprint is MD5:52:8c:b6:c2:20:40:af:f4:82:19:a5:39:85:ba:90:e4.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'localhost' (ECDSA) to the list of known hosts.
+root@localhost's password:
+Connected to localhost.
+sftp> put putty-0.73.tar.gz /tmp
+Uploading putty-0.73.tar.gz to /tmp/putty-0.73.tar.gz
+putty-0.73.tar.gz                             100%  306   336.8KB/s   00:00
+sftp> exit
+
+
+System updates and Repos
+
+yum command isntall a package from repo defined in /etc/yum/repos.d
+
+rpm (Red hat package manager)
+
+Diff b/w yum and rpm
+
+rpm used when you already have a package downloaded 
+
+yum downoads it for you
+
+To install package 
+
+rpm -ihv <location of rpm>
+
+rpm -e <package> - To remove the package
+
+
+Syetm Upgrade/Patch
+
+Minor upgrade can be done via yum
+
+yum update -y
+
+yum update vs upgrade
+upgrade = delete packages and install new one
+
+update=preserve old packages
+
+
+--------Create local repository via DVD
+
+Create a local diretory 
+ will contain all packages
+
+remove contents from yum.repos.d/
+in yum.repos.d/
+vi localrepo
+--Contents
+
+Save file
+createrepo localrepo
+then test yum install
+
+
+---Advance Package management
+
+To know more about package
+rpm -qi <package name>
+
+To know config files of the package
+rpm -qc <package name>
+
+
+To know if command is part of which package
+
+which <command>
+rpm -qf <output from above commnad>
+
+
+
+----Roll Back and Updates
+
+Virtual machine  - take Snapshot
+
+Roll back package/patch
+
+yum install <package -name>
+
+yum history undo <id>
+
+
+Rollback an update
+
+Downgrading a systerm to minor version is not recommeded as might leave the syetm in undersirable or unstable state
+
+
+yum update - will preserve them
+yum upgrade - Upgrade will delete old packages
+
+
+ssh and telnet
+
+Telnet - Unsecured connection b/w computers
+ssh = secured
+
+Two types of package fr most services
+
+Client Package
+Server Package
+
+systemctl stop sshd
+
+systemctl start sshd
+
+systemctl status sshd
+
+
+DNS = Domain name system
+
+Needs bind package
+
+Hostname to IP   (A Record)
+IP to hostname  (PTR Record)
+
+Hostname to Hostname (cname record)
+
+Files 
+
+/etc/named.conf
+
+/var/named
+
+
+Service
+systemctl start named
+
+DNS listens on port 53
+
+---
+NTP
+
+Purpose
+
+Time Synchronization
+
+File
+
+/etc/ntp.conf
+
+Service 
+
+systemctl restart ntpd
+
+Command 
+ntpq > peers
+
+Ntp port 123
+
+
+---
+
+Chronyd - daemon
+
+Package name = chronyd
+Config file - /etc/chrony.conf
+
+Log file - /var/log/chrony
+
+Serverice = systemctl start chronyd
+
+COmmnad:
+
+chronyc
+
+DOnt run ntp and chronyd at the same time
+
+
+---------
+Sendmail
+
+Files
+/etc/mail/sendmail.mc
+/etc/mail/sendmail.cf
+/etc/mail/
+
+Service
+systemctl restart sendmail
+
+Command
+maill -s "Subject" xyz@domain.com
+
+yum install sendmail
+yum install sendmail-cf
+
+
+---
+
+Web server httpd
+
+files
+/etc/http/conf/httpd.conf
+/var/www/html/index.html/
+
+
+systemctl restart httpd
+systemctl status httpd
+
+Log file /var/log/httpd
+
+systemctl stop firewalld
+
+
+
+---Rsyslog
+
+Purpose generate logs or collect lgs from other servers
+
+Service or package name - rsyslog
+
+/etc/rsyslog.conf
+
+systemctl restart syslog
+systemctl enable rsyslog
+
+
+Linux OS Hardening
+
+1. User Account
+2. Remove unwanted packages
+3. Stop un used services
+4. Check on listening ports
+4. Secure ssh config
+5. Enable firwall
+6. Enable selinux
+7. Changing listening services port numbers
+8. Keep your os upto date
+
+User Account
+Check when password expires
+
+chage -l osboxes
+
+For users
+can /etc/login.defs
+
+/etc/pam.d
+
+
+
+Remove Unwanted packages
+
+rpm -e <package name>
+
+
+Stop Un used services
+
+systemctl -a  - Shows all running services
+
+Check on listening ports
+
+
+netstat -tulnp
+
+
+Enable firewalld
+systemctl start firewalld
+
+Iptables config 
+
+/etc/systemctl.iptables-config
+
+Enable Selinux
+
+Security Enhanced Linux 
+
+Know more about a file
+stat <filename>
+
+
+
+Open LDAP Instalaltion
+
+Open source implementation of open directory services
+
+Open Ldap Service
+slapd
+
+Start or stop service
+systemctl start slapd
+systemctl enable slapd
+
+Config files
+/etc/openldap/sladp.d/
+
+
+
+Dependencies Resolved
+
+======================================================================================================================================
+ Package                                 Arch                      Version                              Repository               Size
+======================================================================================================================================
+Installing:
+ compat-openldap                         x86_64                    1:2.3.43-5.el7                       base                    174 k
+ openldap-clients                        x86_64                    2.4.44-21.el7_6                      base                    190 k
+ openldap-devel                          x86_64                    2.4.44-21.el7_6                      base                    804 k
+ openldap-servers                        x86_64                    2.4.44-21.el7_6                      base                    2.2 M
+ openldap-servers-sql                    x86_64                    2.4.44-21.el7_6                      base                    151 k
+Installing for dependencies:
+ cyrus-sasl-devel                        x86_64                    2.1.26-23.el7                        base                    310 k
+ unixODBC                                x86_64                    2.3.1-14.el7                         base                    413 k
+
+Transaction Summary
+======================================================================================================================================
+Install  5 Packages (+2 Dependent packages)
+
+Total download size: 4.2 M
+Installed size: 12 M
+Is this ok [y/d/N]: y
+Downloading packages:
+(1/7): compat-openldap-2.3.43-5.el7.x86_64.rpm                                                                 | 174 kB  00:00:00
+(2/7): cyrus-sasl-devel-2.1.26-23.el7.x86_64.rpm                                                               | 310 kB  00:00:00
+(3/7): openldap-clients-2.4.44-21.el7_6.x86_64.rpm                                                             | 190 kB  00:00:00
+(4/7): openldap-servers-sql-2.4.44-21.el7_6.x86_64.rpm                                                         | 151 kB  00:00:00
+(5/7): unixODBC-2.3.1-14.el7.x86_64.rpm                                                                        | 413 kB  00:00:01
+(6/7): openldap-devel-2.4.44-21.el7_6.x86_64.rpm                                                               | 804 kB  00:00:01
+(7/7): openldap-servers-2.4.44-21.el7_6.x86_64.rpm                                                             | 2.2 MB  00:00:02
+--------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                 1.0 MB/s | 4.2 MB  00:00:04
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : cyrus-sasl-devel-2.1.26-23.el7.x86_64                                                                              1/7
+  Installing : unixODBC-2.3.1-14.el7.x86_64                                                                                       2/7
+  Installing : openldap-servers-2.4.44-21.el7_6.x86_64                                                                            3/7
+  Installing : openldap-servers-sql-2.4.44-21.el7_6.x86_64                                                                        4/7
+  Installing : openldap-devel-2.4.44-21.el7_6.x86_64                                                                              5/7
+  Installing : openldap-clients-2.4.44-21.el7_6.x86_64                                                                            6/7
+  Installing : 1:compat-openldap-2.3.43-5.el7.x86_64                                                                              7/7
+  Verifying  : openldap-servers-2.4.44-21.el7_6.x86_64                                                                            1/7
+  Verifying  : openldap-servers-sql-2.4.44-21.el7_6.x86_64                                                                        2/7
+  Verifying  : 1:compat-openldap-2.3.43-5.el7.x86_64                                                                              3/7
+  Verifying  : unixODBC-2.3.1-14.el7.x86_64                                                                                       4/7
+  Verifying  : openldap-devel-2.4.44-21.el7_6.x86_64                                                                              5/7
+  Verifying  : cyrus-sasl-devel-2.1.26-23.el7.x86_64                                                                              6/7
+  Verifying  : openldap-clients-2.4.44-21.el7_6.x86_64                                                                            7/7
+
+Installed:
+  compat-openldap.x86_64 1:2.3.43-5.el7      openldap-clients.x86_64 0:2.4.44-21.el7_6      openldap-devel.x86_64 0:2.4.44-21.el7_6
+  openldap-servers.x86_64 0:2.4.44-21.el7_6  openldap-servers-sql.x86_64 0:2.4.44-21.el7_6
+
+Dependency Installed:
+  cyrus-sasl-devel.x86_64 0:2.1.26-23.el7                                unixODBC.x86_64 0:2.3.1-14.el7
+
+Complete!
+
+
+/etc/nsswitch.conf - tracks the user authentication
+
+--------
+
+Tracing Network Route (traceroute)
+
+Command is used to map the journey that a packet of information undertake from source to destination. One use is to locate where data loss occurs through a newtwork 
+
+Each hop in record reflects a new server o router b/w the source  n target reviweing results via traceroute helps
+
+traceroute uses 33434
+
+netstat -rnv - Shows kernel routing table
 
