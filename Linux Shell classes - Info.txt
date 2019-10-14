@@ -1140,3 +1140,968 @@ traceroute uses 33434
 
 netstat -rnv - Shows kernel routing table
 
+
+
+--------------
+
+Module 8 Disk Management and Run levels
+
+System Run Level
+
+0 Main Run level -  init 0 - Shut down (halt the system)
+1  Single user mode , usually aliases as s or S
+2
+3
+4
+5
+6 Reboot the system
+
+Other run levell
+2 - Multi user mode without networking
+3  -Multi user mode with networking
+5 - Multi user mode with networking and GUI
+
+Please note run level 4 is udndefined or not used/User definable
+
+To check run level
+
+who -r
+
+
+Linux Boot Process
+
+BIOS Basic I/O System executes MBR, performs system integrity check and check for Boot loader liek CD/DVD
+MBR Master boot Record located at first sector of disk have info about GRUB
+GRUB GRant unified Boot Loader executes kernal. /boot/grub, can select which order to boot
+Kernel Mount boot, Kernel executes /sbin/init program. starts initial 
+Init Init executes run level programs
+Runlevel Runlevel rpogram are executed from /etc/rc.d/
+
+Newer version of linux
+/etc/systemd/system/default.target
+
+To set new default run-level run
+systemctl set-default [new target]
+
+Odler version
+/etc/inittab
+
+init config files are located in /etc/init.d
+
+
+
+Message of the day
+
+Put a message in the file
+/etc/motd
+
+------
+Cusotnmized message of the day
+
+Create a new file in /etc/profile.d/motd.sh
+
+Add desired command in motd.sh file
+
+
+Modify the /etc/ssh/sshd_config to edit #PrintMoted yes to PrintMotd no
+
+Restart sshd daemon
+systemctl restart sshd.service
+
+Storage
+
+1. Local Storage
+2. SAN (Storage Area Network)
+3. NAS ( to attach ccomputer through network)
+
+
+Commands for Disk Partition
+
+df - Tells disk information where it iss partioned to 
+fdisk How much disk i
+
+fdisk -ls and how many partition are created with that
+
+
+Add disk and creating partition
+
+
+fdisk -l
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+[root@osboxes osboxes]# clear
+[root@osboxes osboxes]# fdisk
+Usage:
+ fdisk [options] <disk>    change partition table
+ fdisk [options] -l <disk> list partition table(s)
+ fdisk -s <partition>      give partition size(s) in blocks
+
+Options:
+ -b <size>             sector size (512, 1024, 2048 or 4096)
+ -c[=<mode>]           compatible mode: 'dos' or 'nondos' (default)
+ -h                    print this help text
+ -u[=<unit>]           display units: 'cylinders' or 'sectors' (default)
+ -v                    print program version
+ -C <number>           specify the number of cylinders
+ -H <number>           specify the number of heads
+ -S <number>           specify the number of sectors per track
+
+[root@osboxes osboxes]# fdisk -l
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+[root@osboxes osboxes]# fdisk -ls
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+
+
+--After assignng a new disk in Vbox
+
+[root@osboxes osboxes]# fdisk -l
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+
+Disk /dev/sdb: 2135 MB, 2135938048 bytes, 4171754 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+[root@osboxes osboxes]# fdisk /dev/sdb
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xf8066a97.
+
+Command (m for help): help
+h: unknown command
+Command action
+   a   toggle a bootable flag
+   b   edit bsd disklabel
+   c   toggle the dos compatibility flag
+   d   delete a partition
+   g   create a new empty GPT partition table
+   G   create an IRIX (SGI) partition table
+   l   list known partition types
+   m   print this menu
+   n   add a new partition
+   o   create a new empty DOS partition table
+   p   print the partition table
+   q   quit without saving changes
+   s   create a new empty Sun disklabel
+   t   change a partition's system id
+   u   change display/entry units
+   v   verify the partition table
+   w   write table to disk and exit
+   x   extra functionality (experts only)
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1):
+First sector (2048-4171753, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-4171753, default 4171753):
+Using default value 4171753
+Partition 1 of type Linux and of size 2 GiB is set
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+
+ fdisk -l
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+
+Disk /dev/sdb: 2135 MB, 2135938048 bytes, 4171754 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xf8066a97
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048     4171753     2084853   83  Linux
+
+
+
+Now volume is created we haev to assign a file system type to it
+
+we will create a xfs
+
+mkfs.xfs /dev/sdb1
+meta-data=/dev/sdb1              isize=512    agcount=4, agsize=130304 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=521213, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+[root@osboxes osboxes]#
+
+
+Now we have to moun to certain mount point
+
+
+[root@osboxes osboxes]# mkdir /data
+[root@osboxes osboxes]# mount /dev/sdb1 /data
+[root@osboxes osboxes]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        1.9G     0  1.9G   0% /dev
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           1.9G  9.5M  1.9G   1% /run
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/sda3       237G  4.2G  220G   2% /
+/dev/sda1       976M  192M  718M  22% /boot
+/dev/sda2       247G  161M  235G   1% /home
+tmpfs           379M  4.0K  379M   1% /run/user/42
+tmpfs           379M   24K  379M   1% /run/user/1000
+/dev/sdb1       2.0G   33M  2.0G   2% /data
+
+
+Persist Entry in /etc/fstab
+
+
+cat /etc/fstab
+
+#
+# /etc/fstab
+# Created by anaconda on Mon Feb 11 13:10:45 2019
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=25e77052-3e2f-47a0-ba1d-4e3b5c698ac7 /                       ext4    defaults        1 1
+UUID=ba4b75f6-ea8f-4ac4-a1ee-aae1f3198858 /boot                   ext4    defaults        1 2
+UUID=f2a9fd86-def0-4c11-a57f-27d356d8905e /home                   ext4    defaults        1 2
+UUID=6b075ea2-0273-4adc-8a80-68d58d55fe27 swap                    swap    defaults        0 0
+/dev/sdb1       /data   xfs     defaults        0       0
+[root@osboxes osboxes]#
+
+To unmount
+umount /data (mount point)
+
+To mount back to /etc/fstab
+mount -a
+
+
+
+--------------------------------------
+Logical Volume Management
+
+Allow disk to be combined together
+
+Disk/s -> Volume Groups  - > Multiple Mount Point
+
+
+LVM Config During Install
+
+
+
+
+Add Virtual Diska nd create new LVM partition
+
+
+From Bottom to Top
+Hard Disks ( /dev/sda/,/dev/sdb,/dev/sdc)- > Partitions (/dev/sda1,/dev/sda2,/dev/sda3/) -> Physical Volume (/dev/sda1,/dev/sdb1//dev/sdb3) -> Volume Group (datavg) -> Logical Volume(s) (datalv) -> File System (datafs)
+
+
+We created a hard disk as vitual disk in VMware
+
+Now creating partition 
+
+disk -l
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+
+Disk /dev/sdb: 2135 MB, 2135938048 bytes, 4171754 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xf8066a97
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048     4171753     2084853   83  Linux
+
+Disk /dev/sdc: 2147 MB, 2147483648 bytes, 4194304 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+[root@osboxes osboxes]# fdisk /dev/sdc
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xb0055477.
+
+Command (m for help): p
+
+Disk /dev/sdc: 2147 MB, 2147483648 bytes, 4194304 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xb0055477
+
+   Device Boot      Start         End      Blocks   Id  System
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-4194303, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-4194303, default 4194303):
+Using default value 4194303
+Partition 1 of type Linux and of size 2 GiB is set
+
+Command (m for help): p
+
+Disk /dev/sdc: 2147 MB, 2147483648 bytes, 4194304 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xb0055477
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1            2048     4194303     2096128   83  Linux
+
+Command (m for help): m
+Command action
+   a   toggle a bootable flag
+   b   edit bsd disklabel
+   c   toggle the dos compatibility flag
+   d   delete a partition
+   g   create a new empty GPT partition table
+   G   create an IRIX (SGI) partition table
+   l   list known partition types
+   m   print this menu
+   n   add a new partition
+   o   create a new empty DOS partition table
+   p   print the partition table
+   q   quit without saving changes
+   s   create a new empty Sun disklabel
+   t   change a partition's system id
+   u   change display/entry units
+   v   verify the partition table
+   w   write table to disk and exit
+   x   extra functionality (experts only)
+
+Command (m for help): t
+Selected partition 1
+Hex code (type L to list all codes): L
+
+ 0  Empty           24  NEC DOS         81  Minix / old Lin bf  Solaris
+ 1  FAT12           27  Hidden NTFS Win 82  Linux swap / So c1  DRDOS/sec (FAT-
+ 2  XENIX root      39  Plan 9          83  Linux           c4  DRDOS/sec (FAT-
+ 3  XENIX usr       3c  PartitionMagic  84  OS/2 hidden C:  c6  DRDOS/sec (FAT-
+ 4  FAT16 <32M      40  Venix 80286     85  Linux extended  c7  Syrinx
+ 5  Extended        41  PPC PReP Boot   86  NTFS volume set da  Non-FS data
+ 6  FAT16           42  SFS             87  NTFS volume set db  CP/M / CTOS / .
+ 7  HPFS/NTFS/exFAT 4d  QNX4.x          88  Linux plaintext de  Dell Utility
+ 8  AIX             4e  QNX4.x 2nd part 8e  Linux LVM       df  BootIt
+ 9  AIX bootable    4f  QNX4.x 3rd part 93  Amoeba          e1  DOS access
+ a  OS/2 Boot Manag 50  OnTrack DM      94  Amoeba BBT      e3  DOS R/O
+ b  W95 FAT32       51  OnTrack DM6 Aux 9f  BSD/OS          e4  SpeedStor
+ c  W95 FAT32 (LBA) 52  CP/M            a0  IBM Thinkpad hi eb  BeOS fs
+ e  W95 FAT16 (LBA) 53  OnTrack DM6 Aux a5  FreeBSD         ee  GPT
+ f  W95 Ext'd (LBA) 54  OnTrackDM6      a6  OpenBSD         ef  EFI (FAT-12/16/
+10  OPUS            55  EZ-Drive        a7  NeXTSTEP        f0  Linux/PA-RISC b
+11  Hidden FAT12    56  Golden Bow      a8  Darwin UFS      f1  SpeedStor
+12  Compaq diagnost 5c  Priam Edisk     a9  NetBSD          f4  SpeedStor
+14  Hidden FAT16 <3 61  SpeedStor       ab  Darwin boot     f2  DOS secondary
+16  Hidden FAT16    63  GNU HURD or Sys af  HFS / HFS+      fb  VMware VMFS
+17  Hidden HPFS/NTF 64  Novell Netware  b7  BSDI fs         fc  VMware VMKCORE
+18  AST SmartSleep  65  Novell Netware  b8  BSDI swap       fd  Linux raid auto
+1b  Hidden W95 FAT3 70  DiskSecure Mult bb  Boot Wizard hid fe  LANstep
+1c  Hidden W95 FAT3 75  PC/IX           be  Solaris boot    ff  BBT
+1e  Hidden W95 FAT1 80  Old Minix
+Hex code (type L to list all codes): 8e
+Changed type of partition 'Linux' to 'Linux LVM'
+
+Command (m for help): p
+
+Disk /dev/sdc: 2147 MB, 2147483648 bytes, 4194304 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xb0055477
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1            2048     4194303     2096128   8e  Linux LVM
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@osboxes osboxes]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        1.9G     0  1.9G   0% /dev
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           1.9G  9.6M  1.9G   1% /run
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/sda3       237G  4.2G  220G   2% /
+/dev/sdb1       2.0G   33M  2.0G   2% /data
+/dev/sda1       976M  192M  718M  22% /boot
+/dev/sda2       247G  161M  235G   1% /home
+tmpfs           379M  4.0K  379M   1% /run/user/42
+tmpfs           379M   24K  379M   1% /run/user/1000
+[root@osboxes osboxes]# fdisk -l
+
+Disk /dev/sda: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x000bed01
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *        2048     2099199     1048576   83  Linux
+/dev/sda2         2099200   528480255   263190528   83  Linux
+/dev/sda3       528480256  1031796735   251658240   83  Linux
+/dev/sda4      1031796736  1048575999     8389632    5  Extended
+/dev/sda5      1031800832  1048575999     8387584   82  Linux swap / Solaris
+
+Disk /dev/sdb: 2135 MB, 2135938048 bytes, 4171754 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xf8066a97
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048     4171753     2084853   83  Linux
+
+Disk /dev/sdc: 2147 MB, 2147483648 bytes, 4194304 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xb0055477
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1            2048     4194303     2096128   8e  Linux LVM
+
+
+
+
+Now create Physical Volume
+
+
+[root@osboxes osboxes]# pvcreate /dev/sdc1
+  Physical volume "/dev/sdc1" successfully created.
+[root@osboxes osboxes]# pvdisplay
+  "/dev/sdc1" is a new physical volume of "<2.00 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/sdc1
+  VG Name
+  PV Size               <2.00 GiB
+  Allocatable           NO
+  PE Size               0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               UFJLAB-wzLR-P9yc-x9TT-SAME-gpsK-XcXIi4
+
+[root@osboxes osboxes]#
+
+
+Create Volume Group
+
+
+vgcreate test_vg /dev/sdc1
+  Volume group "test_vg" successfully created
+[root@osboxes osboxes]# vgdisplay
+  --- Volume group ---
+  VG Name               test_vg
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <2.00 GiB
+  PE Size               4.00 MiB
+  Total PE              511
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       511 / <2.00 GiB
+  VG UUID               sZdalT-YTGG-7fOt-UHSl-TLED-gqh6-HS2uY1
+
+[root@osboxes osboxes]# vgdisplay test_vg
+  --- Volume group ---
+  VG Name               test_vg
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <2.00 GiB
+  PE Size               4.00 MiB
+  Total PE              511
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       511 / <2.00 GiB
+  VG UUID               sZdalT-YTGG-7fOt-UHSl-TLED-gqh6-HS2uY1
+  
+  
+  
+  Create logical Volume
+  
+  
+  
+[root@osboxes osboxes]# lvcreate -n test_lv --size 2020M test_vg
+  Logical volume "test_lv" created.
+[root@osboxes osboxes]# lvdisplay test_lv
+  Volume group "test_lv" not found
+  Cannot process volume group test_lv
+[root@osboxes osboxes]# lvdisplay
+  --- Logical volume ---
+  LV Path                /dev/test_vg/test_lv
+  LV Name                test_lv
+  VG Name                test_vg
+  LV UUID                Z3W7Ve-IEla-RDMr-ekeA-EcHd-Uu7r-Z7Axak
+  LV Write Access        read/write
+  LV Creation host, time osboxes, 2019-10-14 01:15:30 -0400
+  LV Status              available
+  # open                 0
+  LV Size                1.97 GiB
+  Current LE             505
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           253:0
+
+mkfs.xfs /dev/test_vg/test_lv
+
+
+mount /dev/test_vg/test_lv /test
+
+Persist entry in /etc/fstab, check proper df -h 
+
+[root@osboxes osboxes]# df -h | grep /test
+/dev/mapper/test_vg-test_lv  997M   33M  965M   4% /test
+[root@osboxes osboxes]# cat /etc/fstab | tail -1
+/dev/mapper/test_vg-test_lv     /test   xfs     defaults        0       0
+[root@osboxes osboxes]#
+
+-------------
+
+Add and extend disk using LVm
+
+
+add a new disk from Vmwware box
+
+Partiton the disk
+
+Same method as above
+enter fdisk
+ 
+ Type n and put the value
+ Choose t for Linux LVM Type
+ p to check the partition
+ w to write
+ 
+ 
+ Now create Physical volume - Have to do everytime
+ 
+ vgextend test_vg /dev/sdd1
+  Volume group "test_vg" successfully extended
+[root@osboxes osboxes]# vgdisplay
+  --- Volume group ---
+  VG Name               test_vg
+  System ID
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                2
+  Act PV                2
+  VG Size               8.99 GiB
+  PE Size               4.00 MiB
+  Total PE              2302
+  Alloc PE / Size       250 / 1000.00 MiB
+  Free  PE / Size       2052 / <8.02 GiB
+  VG UUID               Z5O4Zj-aJgw-4yrk-cbK1-6OaQ-rAa3-QR5k1m
+
+[root@osboxes osboxes]#
+
+Do Logical Volume extend
+
+[root@osboxes osboxes]# lvextend -L+8000M /dev/mapper/test_vg-test_lv
+  Size of logical volume test_vg/test_lv changed from 1000.00 MiB (250 extents) to <8.79 GiB (2250 extents).
+  Logical volume test_vg/test_lv successfully resized.
+[root@osboxes osboxes]#
+
+
+Now extend file system
+
+[root@osboxes osboxes]# xfs_growfs /dev/mapper/test_vg-test_lv
+meta-data=/dev/mapper/test_vg-test_lv isize=512    agcount=4, agsize=64000 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0 spinodes=0
+data     =                       bsize=4096   blocks=256000, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal               bsize=4096   blocks=855, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 256000 to 2304000
+[root@osboxes osboxes]# df -h
+Filesystem                   Size  Used Avail Use% Mounted on
+devtmpfs                     1.9G     0  1.9G   0% /dev
+tmpfs                        1.9G     0  1.9G   0% /dev/shm
+tmpfs                        1.9G  9.6M  1.9G   1% /run
+tmpfs                        1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/sda3                    237G  4.2G  220G   2% /
+/dev/sda1                    976M  192M  718M  22% /boot
+/dev/mapper/test_vg-test_lv  8.8G   34M  8.8G   1% /test
+/dev/sdb1                    2.0G   33M  2.0G   2% /data
+/dev/sda2                    247G  161M  235G   1% /home
+tmpfs                        379M  4.0K  379M   1% /run/user/42
+tmpfs                        379M   28K  379M   1% /run/user/1000
+[root@osboxes osboxes]#
+
+
+Adding/Extend Swap Space
+
+Swap space in linux is used wgen RAM is full and system needs more memory. Inactive pacges are moved to swap space.
+
+Recommended swap size = twice size of ram
+
+M = RAM in GB and S = AMount of swap in GB then
+if M < 2
+then S=  M *2
+else
+S = M +2
+
+
+Commands
+dd
+mkswap
+swapon or swapoff
+
+Add new swap
+[root@osboxes osboxes]# dd if=/dev/zero of=/newSwap bs=1M count=1024
+1024+0 records in
+1024+0 records out
+1073741824 bytes (1.1 GB) copied, 10.4292 s, 103 MB/s
+
+[root@osboxes /]# mkswap /newSwap
+Setting up swapspace version 1, size = 1048572 KiB
+no label, UUID=1be7e9b9-efe4-44e6-91c2-6f3ff5466864
+[root@osboxes /]#
+
+
+
+File System Check and xfs_repair (For xfs file system)
+
+fsck utility is for ext2, ext3, ext4
+
+
+Make sure to execute the fsck on an unmounted file system to avoid any dta corruption issues
+
+Force file system check even if its clean using option -f
+
+Attempt to fix detected problems automatically using option -y
+
+xfs_Repair is highly scalable and is designed to repir even very large file system ,xfs_repair does not runa t boot time
+
+Exit codes for fsck
+0 - No errors
+1 - File system errors corected
+
+2 - System should be rebooted
+
+4- File syetm errors left uncorrected
+
+
+
+ xfs_repair /dev/sdb1
+xfs_repair: /dev/sdb1 contains a mounted filesystem
+xfs_repair: /dev/sdb1 contains a mounted and writable filesystem
+
+fatal error -- couldn't initialize XFS library
+[root@osboxes osboxes]# umount /data
+[root@osboxes osboxes]# df -h
+Filesystem                   Size  Used Avail Use% Mounted on
+devtmpfs                     1.9G     0  1.9G   0% /dev
+tmpfs                        1.9G     0  1.9G   0% /dev/shm
+tmpfs                        1.9G  9.6M  1.9G   1% /run
+tmpfs                        1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/sda3                    237G  5.2G  219G   3% /
+/dev/sda1                    976M  192M  718M  22% /boot
+/dev/mapper/test_vg-test_lv  8.8G   34M  8.8G   1% /test
+/dev/sda2                    247G  161M  235G   1% /home
+tmpfs                        379M  4.0K  379M   1% /run/user/42
+tmpfs                        379M   28K  379M   1% /run/user/1000
+[root@osboxes osboxes]# xfs_repair /dev/sdb1
+Phase 1 - find and verify superblock...
+Phase 2 - using internal log
+        - zero log...
+        - scan filesystem freespace and inode maps...
+        - found root inode chunk
+Phase 3 - for each AG...
+        - scan and clear agi unlinked lists...
+        - process known inodes and perform inode discovery...
+        - agno = 0
+        - agno = 1
+        - agno = 2
+        - agno = 3
+        - process newly discovered inodes...
+Phase 4 - check for duplicate blocks...
+        - setting up duplicate extent list...
+        - check for inodes claiming duplicate blocks...
+        - agno = 0
+        - agno = 1
+        - agno = 2
+        - agno = 3
+Phase 5 - rebuild AG headers and trees...
+        - reset superblock...
+Phase 6 - check inode connectivity...
+        - resetting contents of realtime bitmap and summary inodes
+        - traversing filesystem ...
+        - traversal finished ...
+        - moving disconnected inodes to lost+found ...
+Phase 7 - verify and correct link counts...
+done
+[root@osboxes osboxes]# echo $?
+0
+[root@osboxes osboxes]# mount /dev/sdb1 /data
+[root@osboxes osboxes]# df -h
+Filesystem                   Size  Used Avail Use% Mounted on
+devtmpfs                     1.9G     0  1.9G   0% /dev
+tmpfs                        1.9G     0  1.9G   0% /dev/shm
+tmpfs                        1.9G  9.6M  1.9G   1% /run
+tmpfs                        1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/sda3                    237G  5.2G  219G   3% /
+
+
+System backup
+
+5 diff types of backups
+
+1. Syetm backup (enitre image tools usign acronis, veeam, common vault etc)
+
+2. Application backup (3rd party application backup solution)
+
+3. Database backup (Oracle Dataguard, SQL backup etc)
+
+4. File system backup (tar.gzip directories etc)
+
+5. Disk backup or disk cloning (dd command)
+
+dd primary purpose is tp convert and copy files
+
+to backup or clone and entire hard disk to another disk connected to same systeme xecute the dd command as shown 
+
+
+dd f=<source file name> of=<target file name> options
+eg
+dd if=/dev/sda pf=/dev/sdb
+
+To backup/copy the disk partition
+dd if=/dev/sda1 of=/root/sda1.img
+
+Restoring this image file to other machine after copying the img
+dd if=/root/sda1.img of=/dev/sdb3
+
+
+[root@osboxes osboxes]# dd if=/dev/sda1 of=/data/boot.img
+2097152+0 records in
+2097152+0 records out
+1073741824 bytes (1.1 GB) copied, 36.9215 s, 29.1 MB/s
+[root@osboxes osboxes]# cd /data
+[root@osboxes data]# ls
+boot.img
+[root@osboxes data]#
+
+If you are copying from disk to disk then no need to specify /dev/sda1 we can specify /dev/sda
+
+
+To restore
+
+[root@osboxes data]# dd if=/data/boot.img /dev/sda1
+
+
+Network File System
+
+NFS - Network File System
+
+1. it is a client server stystem that allow users toa ccess across a newtwork and treat as if they were accessed locally.
+
+2. For eg if you were usign a computer linked to second computer via NFS you could access files on 2nd computer as if they resided in a directory on the first computer. This is accomplished through exporting ( process by which an NFS srver provided remote client with acces to its files and mounting the process by which client map NFS shared file system)
+
+
+
+Steps for NFS Server Config
+
+Install Packages
+yum install nfs-utils libnsfidmap
+
+Once package are install enable and start NFS services
+
+systemctl enable rpcbind
+systemctl enable nfs-server
+systemctl start rpcbind
+systemctl start nfs-server
+systemctl start rpc-statd
+systemctl start nfs-idmapd
+
+
+Create NFS Share directory and assign permissions
+
+mkdir /file
+chmod a+rwx /file
+
+Modify /etc/exports file to add new shared file system
+
+/file 192.168.12.7 (rw,sync,no_root_squash) (for only 1 host
+
+/file - NFS Share
+
+192.168.12.7 - IP with we we will share the NFS share, if we put * all server will have access
+
+rw- Read write permission on the share
+
+sync - All changes to file syste, are immeduately flushd to disk, the resepctive write operation are being waited for
+
+no_root_squash - Root on the client machine will have same level of access to the files on the system as root on the server
+
+
+
+Once /etc/exports are done export fs with
+exportfs -rv
+
+
+Steps for NFS Client Config
+
+yum install nfs-utils rpcbind
+
+Once package are installed enable and start rpcbind service
+
+service rpcbind start
+
+Make sure firewall and iptables are not running
+
+Show mount from nfs server
+
+showmount -e <server ip>
+
+
+Create a mount point
+
+mkdir /mnt/app
+
+Mount NFS File system
+
+mount <server ip>:/file /mnt/app
+
+df -haev
+unmount <mount point>
